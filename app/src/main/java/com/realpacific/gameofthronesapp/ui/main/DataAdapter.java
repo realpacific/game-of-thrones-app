@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.realpacific.gameofthronesapp.R;
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 
 import java.util.List;
 
@@ -17,10 +17,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ListViewHolder> {
-    List<Characters> list;
-    Context context;
+    private List<Character> list;
+    private Context context;
 
-    public DataAdapter(Context context, List<Characters> list) {
+    public DataAdapter(Context context, List<Character> list) {
         this.list = list;
         this.context = context;
     }
@@ -28,21 +28,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ListViewHolder
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item, parent, false);
         return new ListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        Characters characters = list.get(position);
-        holder.title.setText(characters.getName());
-        if(characters.getPlayedBy().size()>0)
-            holder.preview.setText(characters.getPlayedBy().get(0));
+        Character character = list.get(position);
+        holder.title.setText(character.getName());
+        if (character.getPlayedBy().size() > 0)
+            holder.preview.setText(character.getPlayedBy().get(0));
 
         StringBuilder sb = new StringBuilder();
-        for(String titles : characters.getTitles())
+        for (String titles : character.getTitles())
             sb.append(titles).append(", ");
-        holder.titles.setText(sb.toString());
+        holder.titles.setText(sb.substring(0, sb.lastIndexOf(",")));
     }
 
     @Override
@@ -51,11 +51,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ListViewHolder
     }
 
 
-    public class ListViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.single_name) TextView title;
-        @BindView(R.id.single_played_by) TextView preview;
-        @BindView(R.id.single_titles) TextView titles;
-        public ListViewHolder(View itemView) {
+    static class ListViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.single_name)
+        TextView title;
+        @BindView(R.id.single_played_by)
+        TextView preview;
+        @BindView(R.id.single_titles)
+        TextView titles;
+
+        ListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

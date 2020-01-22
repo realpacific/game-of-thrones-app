@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ApiModule {
-    final String BASE_URL = "https://anapioficeandfire.com/";
+    private final String BASE_URL = "https://anapioficeandfire.com/";
     @Provides
     @Singleton
     public HttpLoggingInterceptor providesHttpLoggingInterceptor(){

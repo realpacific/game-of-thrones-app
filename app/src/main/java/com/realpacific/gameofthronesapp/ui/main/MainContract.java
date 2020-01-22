@@ -1,17 +1,17 @@
 package com.realpacific.gameofthronesapp.ui.main;
 
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 
 import io.reactivex.Observable;
 
 public class MainContract {
     public interface View{
-        void updateData(Characters character);
+        void updateData(Character character);
         void showSnackbar(String message);
     }
 
     public interface Model{
-        Observable<Characters> result();
+        Observable<Character> result();
     }
 
     public interface Presenter{

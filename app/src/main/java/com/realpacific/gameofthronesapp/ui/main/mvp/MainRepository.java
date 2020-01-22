@@ -2,7 +2,7 @@ package com.realpacific.gameofthronesapp.ui.main.mvp;
 
 import android.util.Log;
 
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 import com.realpacific.gameofthronesapp.entitiy.GameOfThrones;
 import com.realpacific.gameofthronesapp.http.ApiServices;
 import com.realpacific.gameofthronesapp.ui.main.Repository;
@@ -11,13 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 public class MainRepository implements Repository {
     private ApiServices apiServices;
-    private List<Characters> list;
+    private List<Character> list;
     private long timestamp;
     private final long CACHE_TIME_OUT = 20000;
 
@@ -28,22 +25,21 @@ public class MainRepository implements Repository {
 
     }
 
-    private boolean isUpToDate(){
+    private boolean isUpToDate() {
         return (timestamp - System.currentTimeMillis()) < CACHE_TIME_OUT;
     }
 
     @Override
-    public Observable<GameOfThrones> getBooksFromNetwork() {
-        return apiServices.getBooks("5");
+    public Observable<GameOfThrones> getBooksFromNetwork(int bookNumber) {
+        return apiServices.getBooks(String.valueOf(bookNumber));
     }
 
     @Override
-    public Observable<Characters> getCharactersFromMemory() {
-        if(isUpToDate()){
-
+    public Observable<Character> getCharactersFromMemory() {
+        if (isUpToDate()) {
             Log.i("~~~", "getCharactersFromMemory: FROM MEM");
             return Observable.fromIterable(list);
-        }else{
+        } else {
             list.clear();
             timestamp = System.currentTimeMillis();
             return Observable.empty();
@@ -51,28 +47,18 @@ public class MainRepository implements Repository {
     }
 
     @Override
-    public Observable<Characters> getCharactersFromNetwork() {
+    public Observable<Character> getCharactersFromNetwork() {
         Log.i("~~~", "getCharactersFromNetwork: FROM NETWORK");
-       return getBooksFromNetwork().concatMap(new Function<GameOfThrones, Observable<String>>() {
-           @Override
-           public Observable<String> apply(GameOfThrones gameOfThrones) throws Exception {
-               return Observable.fromIterable(gameOfThrones.getCharacters());
-           }
-       }).concatMap(new Function<String, ObservableSource<Characters>>() {
-           @Override
-           public ObservableSource<Characters> apply(String s) throws Exception {
-               return apiServices.getCharacter(s.substring(s.lastIndexOf("/") + 1, s.length()));
-           }
-       }).doOnNext(new Consumer<Characters>() {
-           @Override
-           public void accept(Characters characters) throws Exception {
-               list.add(characters);
-           }
-       });
+        return Observable.fromArray(1, 2, 3, 4, 5)
+                .flatMap(this::getBooksFromNetwork)
+                .concatMap(got -> Observable.fromIterable(got.getCharacters()))
+                .concatMap(url -> apiServices.getCharacter(url.substring(url.lastIndexOf("/"))))
+                .filter(character -> !character.getName().isEmpty())
+                .doOnNext(character -> list.add(character));
     }
 
     @Override
-    public Observable<Characters> getLatestNetworkResponse() {
+    public Observable<Character> getLatestNetworkResponse() {
         return getCharactersFromMemory().switchIfEmpty(getCharactersFromNetwork());
     }
 

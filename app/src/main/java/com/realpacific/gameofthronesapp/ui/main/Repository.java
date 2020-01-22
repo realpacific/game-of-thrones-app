@@ -1,14 +1,14 @@
 package com.realpacific.gameofthronesapp.ui.main;
 
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 import com.realpacific.gameofthronesapp.entitiy.GameOfThrones;
 
 import io.reactivex.Observable;
 
 public interface Repository {
-    Observable<GameOfThrones> getBooksFromNetwork();
+    Observable<GameOfThrones> getBooksFromNetwork(int bookNumber);
 
-    Observable<Characters> getCharactersFromMemory();
-    Observable<Characters> getCharactersFromNetwork();
-    Observable<Characters> getLatestNetworkResponse();
+    Observable<Character> getCharactersFromMemory();
+    Observable<Character> getCharactersFromNetwork();
+    Observable<Character> getLatestNetworkResponse();
 }

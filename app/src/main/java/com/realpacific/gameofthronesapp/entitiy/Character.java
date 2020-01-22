@@ -2,7 +2,7 @@ package com.realpacific.gameofthronesapp.entitiy;
 
 import java.util.List;
 
-public class Characters {
+public class Character {
 
     private String url;
     private String name;

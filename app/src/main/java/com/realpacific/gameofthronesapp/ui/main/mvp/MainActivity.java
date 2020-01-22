@@ -17,7 +17,7 @@ import android.view.MenuItem;
 
 import com.realpacific.gameofthronesapp.R;
 import com.realpacific.gameofthronesapp.di.App;
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 import com.realpacific.gameofthronesapp.ui.main.DataAdapter;
 import com.realpacific.gameofthronesapp.ui.main.MainContract;
 
@@ -29,14 +29,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, MainContract.View {
 
     @Inject
     MainContract.Presenter presenter;
     @BindView(R.id.rv)
     RecyclerView rv;
     DataAdapter adapter;
-    List<Characters> list;
+    List<Character> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,23 +108,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-        } else if (id == R.id.nav_gallery) {
-
-        }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void updateData(Characters character) {
+    public void updateData(Character character) {
         list.add(character);
         adapter.notifyDataSetChanged();
     }

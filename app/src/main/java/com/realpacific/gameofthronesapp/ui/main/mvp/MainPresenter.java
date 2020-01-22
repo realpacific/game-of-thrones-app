@@ -1,17 +1,16 @@
 package com.realpacific.gameofthronesapp.ui.main.mvp;
 
-import com.realpacific.gameofthronesapp.entitiy.Characters;
+import com.realpacific.gameofthronesapp.entitiy.Character;
 import com.realpacific.gameofthronesapp.ui.main.MainContract;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter implements MainContract.Presenter {
-    MainContract.View view;
-    MainContract.Model model;
+    private MainContract.View view;
+    private MainContract.Model model;
 
     public MainPresenter(MainContract.Model model) {
         this.model = model;
@@ -26,15 +25,15 @@ public class MainPresenter implements MainContract.Presenter {
     public void loadData() {
         model.result().subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<Characters>() {
+        .subscribe(new Observer<Character>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(Characters characters) {
-                view.updateData(characters);
+            public void onNext(Character character) {
+                view.updateData(character);
             }
 
             @Override
